@@ -121,10 +121,10 @@ class Game:
 
     @property
     def superBottles(self):
-        # todo use in success
-        for idx, bottle in enumerate(self.bottles):
-            if len(set(bottle.bubbles)) == 1:
-                yield idx
+        idxs = [(idx, bottle) for idx, bottle in enumerate(self.bottles) if len(set(bottle.bubbles)) == 1]
+        idxs = sorted(idxs, key=lambda idxBottle: len(idxBottle[1]), reverse=True)
+        idxs = [idx[0] for idx in idxs]
+        return idxs
 
     def genSteps(self):
         # fill up super bottles
@@ -173,10 +173,7 @@ class Game:
 
     @property
     def solved(self) -> bool:
-        for bottle in self.bottles:
-            if len(set(bottle.bubbles)) > 1:
-                return False
-        return True
+        return len(self.superBottles) == len(self.bottles)
 
     def solve(self):
         if self.solved:
